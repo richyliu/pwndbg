@@ -75,14 +75,17 @@ def get(instruction: PwndbgInstruction) -> List[Tuple[pwndbg.lib.functions.Argum
     name = name.replace("isoc99_", "")  # __isoc99_sscanf
     name = name.replace("@plt", "")  # getpwiod@plt
 
+    # lazy import this large table of functions for performance reasons
+    from pwndbg.lib.functions_table import functions
+
     # If we have particular `XXX_chk` function in our database, we use it.
     # Otherwise, we show args for its unchecked version.
     # We also lstrip `_` in here, as e.g. `__printf_chk` needs the underscores.
-    if name not in pwndbg.lib.functions.functions:
+    if name not in functions:
         name = name.replace("_chk", "")
         name = name.strip().lstrip("_")  # _malloc
 
-    func = pwndbg.lib.functions.functions.get(name, None)
+    func = functions.get(name, None)
 
     if sym:
         try:

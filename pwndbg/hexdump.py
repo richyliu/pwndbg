@@ -15,7 +15,6 @@ import pwndbg.aglib.memory
 import pwndbg.aglib.typeinfo
 import pwndbg.color.hexdump as H
 from pwndbg.color import theme
-from pwndbg.commands.windbg import enhex
 
 color_scheme = None
 printable = None
@@ -181,6 +180,9 @@ def hexdump(
         row_sz = 16 // size
         rows = [values[i * row_sz : (i + 1) * row_sz] for i in range(n_rows)]
         lines = []
+
+        # lazy loading this module for startup performance
+        from pwndbg.commands.windbg import enhex
 
         for i, row in enumerate(rows):
             if not row:

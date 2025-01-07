@@ -53,6 +53,9 @@ last_alive_state = False
 
 
 def show_hint() -> None:
+    # lazy import this large table of functions for performance reasons
+    from pwndbg.lib.functions_table import functions
+
     funcs_list_str = ", ".join(
         message.notice("$" + f.name) for f in pwndbg.gdblib.functions.functions
     )
