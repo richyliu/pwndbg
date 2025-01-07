@@ -127,6 +127,8 @@ IS_CACHING_DISABLED_FOR: Dict[str, bool] = {
 }
 
 
+import line_profiler
+@line_profiler.profile
 def cache_until(*event_names: str) -> Callable[[Callable[P, T]], Callable[P, T]]:
     if any(event_name not in _ALL_CACHE_EVENT_NAMES for event_name in event_names):
         raise ValueError(

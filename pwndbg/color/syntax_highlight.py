@@ -5,6 +5,21 @@ import re
 from typing import Any
 from typing import Dict
 
+import line_profiler
+@line_profiler.profile
+def _main():
+    import pygments
+    import pygments.formatters
+    import pygments.lexers
+    import pygments.util
+    from pwnlib.lexer import PwntoolsLexer
+
+    import pwndbg
+    from pwndbg.color import disable_colors
+    from pwndbg.color import message
+    from pwndbg.color import theme
+_main()
+
 import pygments
 import pygments.formatters
 import pygments.lexers
@@ -16,16 +31,24 @@ from pwndbg.color import disable_colors
 from pwndbg.color import message
 from pwndbg.color import theme
 
-pwndbg.config.add_param("syntax-highlight", True, "Source code / assembly syntax highlight")
-style = theme.add_param(
-    "syntax-highlight-style",
-    "monokai",
-    "Source code / assembly syntax highlight stylename of pygments module",
-)
-
-formatter = pygments.formatters.Terminal256Formatter(style=str(style))
-pwntools_lexer = PwntoolsLexer()
+style = None
+formatter = None
+pwntools_lexer = None
 lexer_cache: Dict[str, Any] = {}
+
+@line_profiler.profile
+def _main2():
+    global style, formatter, pwntools_lexer
+    pwndbg.config.add_param("syntax-highlight", True, "Source code / assembly syntax highlight")
+    style = theme.add_param(
+        "syntax-highlight-style",
+        "monokai",
+        "Source code / assembly syntax highlight stylename of pygments module",
+    )
+
+    formatter = pygments.formatters.Terminal256Formatter(style=str(style))
+    pwntools_lexer = PwntoolsLexer()
+_main2()
 
 
 @pwndbg.config.trigger(style)

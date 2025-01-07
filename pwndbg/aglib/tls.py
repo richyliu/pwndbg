@@ -4,6 +4,18 @@ Getting Thread Local Storage (TLS) information.
 
 from __future__ import annotations
 
+import line_profiler
+@line_profiler.profile
+def _main():
+    import pwndbg.aglib.arch
+    import pwndbg.aglib.disasm
+    import pwndbg.aglib.memory
+    import pwndbg.aglib.regs
+    import pwndbg.aglib.symbol
+    import pwndbg.aglib.typeinfo
+    import pwndbg.aglib.vmmap
+_main()
+
 import pwndbg.aglib.arch
 import pwndbg.aglib.disasm
 import pwndbg.aglib.memory

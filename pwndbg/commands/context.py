@@ -16,6 +16,43 @@ from typing import Optional
 from typing import Tuple
 from typing import TypeVar
 
+import line_profiler
+@line_profiler.profile
+def _main():
+    import unicorn as U
+    from typing_extensions import ParamSpec
+
+    import pwndbg
+    import pwndbg.aglib.arch
+    import pwndbg.aglib.disasm
+    import pwndbg.aglib.nearpc
+    import pwndbg.aglib.regs
+    import pwndbg.aglib.symbol
+    import pwndbg.arguments
+    import pwndbg.chain
+    import pwndbg.color
+    import pwndbg.color.context as C
+    import pwndbg.color.memory as M
+    import pwndbg.color.syntax_highlight as H
+    import pwndbg.commands
+    import pwndbg.commands.telescope
+    import pwndbg.integration
+    import pwndbg.ui
+    from pwndbg.aglib.arch import get_thumb_mode_string
+    from pwndbg.color import ColorConfig
+    from pwndbg.color import ColorParamSpec
+    from pwndbg.color import message
+    from pwndbg.color import theme
+    from pwndbg.commands import CommandCategory
+
+    if pwndbg.dbg.is_gdblib_available():
+        import gdb
+
+        import pwndbg.gdblib.ptmalloc2_tracking
+        import pwndbg.gdblib.symbol
+        import pwndbg.ghidra
+_main()
+
 import unicorn as U
 from typing_extensions import ParamSpec
 
@@ -612,7 +649,9 @@ parser.add_argument(
 )
 
 
+import line_profiler
 @pwndbg.commands.ArgparsedCommand(parser, aliases=["ctx"], category=CommandCategory.CONTEXT)
+@line_profiler.profile
 def context(subcontext=None, enabled=None) -> None:
     """
     Print out the current register, instruction, and stack context.

@@ -1,5 +1,37 @@
 from __future__ import annotations
 
+import line_profiler
+@line_profiler.profile
+def _main():
+    import argparse
+    import functools
+    import io
+    import logging
+    from enum import Enum
+    from typing import Any
+    from typing import Callable
+    from typing import Dict
+    from typing import List
+    from typing import Literal
+    from typing import Optional
+    from typing import Set
+    from typing import Tuple
+    from typing import TypeVar
+
+    from typing_extensions import ParamSpec
+
+    import pwndbg.aglib.heap
+    import pwndbg.aglib.kernel
+    import pwndbg.aglib.proc
+    import pwndbg.aglib.qemu
+    import pwndbg.aglib.regs
+    import pwndbg.exception
+    from pwndbg.aglib.heap.ptmalloc import DebugSymsHeap
+    from pwndbg.aglib.heap.ptmalloc import GlibcMemoryAllocator
+    from pwndbg.aglib.heap.ptmalloc import HeuristicHeap
+    from pwndbg.aglib.heap.ptmalloc import SymbolUnresolvableError
+_main()
+
 import argparse
 import functools
 import io
@@ -605,6 +637,7 @@ class _ArgparsedCommand(Command):
 class ArgparsedCommand:
     """Adds documentation and offloads parsing for a Command via argparse"""
 
+    @line_profiler.profile
     def __init__(
         self,
         parser_or_desc: argparse.ArgumentParser | str,
@@ -719,9 +752,26 @@ def HexOrAddressExpr(s: str) -> int:
         return AddressExpr(s)
 
 
+import line_profiler
+@line_profiler.profile
 def load_commands() -> None:
     # pylint: disable=import-outside-toplevel
     import pwndbg.dbg
+
+    # import argparse
+    # parser = argparse.ArgumentParser(description="Dump pointers and symbols at the specified address.")
+    # parser.add_argument("addr", type=pwndbg.commands.HexOrAddressExpr, help="The address to dump from.")
+    # print('called once')
+    # @ArgparsedCommand(
+    #     parser, aliases=["kg", "abc", "def"], category=CommandCategory.WINDBG
+    # )  # TODO are these really all the same? They had identical implementation...
+    # @OnlyWhenRunning
+    # def foo(addr):
+    #     """
+    #     Dump pointers and symbols at the specified address.
+    #     """
+    #     return None
+    # return
 
     if pwndbg.dbg.is_gdblib_available():
         import pwndbg.commands.ai

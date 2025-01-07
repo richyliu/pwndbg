@@ -1185,7 +1185,9 @@ def _gdb_event_class_from_event_type(ty: pwndbg.dbg_mod.EventType) -> Any:
     raise NotImplementedError(f"unknown event type {ty}")
 
 
+import line_profiler
 class GDB(pwndbg.dbg_mod.Debugger):
+    @line_profiler.profile
     @override
     def setup(self):
         from pwndbg.commands import load_commands

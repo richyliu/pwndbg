@@ -13,6 +13,30 @@ from typing import List
 from typing import Set
 from typing import Tuple
 
+import line_profiler
+@line_profiler.profile
+def _main():
+    import capstone
+    # from capstone import *  # noqa: F403
+
+    import pwndbg
+    import pwndbg.aglib.arch
+    import pwndbg.aglib.disasm.arch
+    import pwndbg.aglib.memory
+    import pwndbg.emu.emulator
+    import pwndbg.lib.cache
+    from pwndbg.aglib.disasm.arch import DEBUG_ENHANCEMENT
+    from pwndbg.aglib.disasm.instruction import ALL_JUMP_GROUPS
+    from pwndbg.aglib.disasm.instruction import PwndbgInstruction
+    from pwndbg.aglib.disasm.instruction import SplitType
+    from pwndbg.aglib.disasm.instruction import make_simple_instruction
+    from pwndbg.color import message
+    from pwndbg.dbg import EventType
+
+    if pwndbg.dbg.is_gdblib_available():
+        import gdb
+_main()
+
 import capstone
 from capstone import *  # noqa: F403
 

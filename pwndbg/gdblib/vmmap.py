@@ -14,6 +14,31 @@ from typing import Optional
 from typing import Set
 from typing import Tuple
 
+import line_profiler
+@line_profiler.profile
+def _main():
+    import gdb
+
+    import pwndbg
+    import pwndbg.aglib.elf
+    import pwndbg.aglib.file
+    import pwndbg.aglib.kernel
+    import pwndbg.aglib.memory
+    import pwndbg.aglib.proc
+    import pwndbg.aglib.qemu
+    import pwndbg.aglib.regs
+    import pwndbg.aglib.stack
+    import pwndbg.auxv
+    import pwndbg.color.message as M
+    import pwndbg.gdblib.abi
+    import pwndbg.gdblib.info
+    import pwndbg.lib.cache
+    import pwndbg.lib.config
+    import pwndbg.lib.memory
+    from pwndbg.aglib.kernel.vmmap import kernel_vmmap_via_monitor_info_mem
+    from pwndbg.aglib.kernel.vmmap import kernel_vmmap_via_page_tables
+_main()
+
 import gdb
 
 import pwndbg

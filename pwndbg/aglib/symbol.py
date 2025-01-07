@@ -5,6 +5,14 @@ vice-versa.
 
 from __future__ import annotations
 
+import line_profiler
+@line_profiler.profile
+def _main():
+    import pwndbg.integration
+    import pwndbg.lib.cache
+    from pwndbg.dbg import SymbolLookupType
+_main()
+
 import pwndbg.integration
 import pwndbg.lib.cache
 from pwndbg.dbg import SymbolLookupType

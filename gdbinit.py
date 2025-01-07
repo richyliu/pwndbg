@@ -194,6 +194,38 @@ def main() -> None:
     except gdb.error as e:
         print(f"Warning: Cannot set gdb charset: '{e}'")
 
+    import line_profiler
+    # wrapped = line_profiler.profile(profile_imports)
+    # wrapped()
+    wrapped = line_profiler.profile(main_wrapper)
+    wrapped(handler, profiler, start_time)
+
+def profile_imports():
+    import capstone
+    import unicorn
+    import pygments
+    import pygments.formatters
+    import pygments.lexers
+    import pygments.util
+
+    import os
+    os.environ['PWNLIB_NOTERM'] = '1'
+    import pwnlib
+    import pwnlib.elf.elf
+    import pwnlib.context
+    import pwnlib.shellcraft
+    import pwnlib.rop.srop
+    import pwndbg  # noqa: F811
+    import pwndbg.dbg.gdb
+
+    pwndbg.dbg = pwndbg.dbg_mod.gdb.GDB()
+    # from pwndbg.gdblib import load_gdblib
+    from pwndbg.aglib import load_aglib
+    # load_gdblib()
+    load_aglib()
+    import pwndbg.commands.windbg
+
+def main_wrapper(handler, profiler, start_time):
     # Add the original stdout methods back to gdb._GdbOutputFile for pwnlib colors
     sys.stdout.isatty = sys.__stdout__.isatty
     sys.stdout.fileno = sys.__stdout__.fileno
@@ -214,6 +246,8 @@ def main() -> None:
     if os.environ.get("PWNDBG_PROFILE") == "1":
         pwndbg.profiling.profiler.stop("pwndbg-load.pstats")
         pwndbg.profiling.profiler.start()
+
+    profiler.dump_stats('out.prof')
 
 
 # We wrap everything in try/except so that we can exit GDB with an error code

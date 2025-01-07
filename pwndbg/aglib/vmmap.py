@@ -2,6 +2,26 @@ from __future__ import annotations
 
 from typing import Tuple
 
+import line_profiler
+@line_profiler.profile
+def _main():
+    import pwndbg
+    import pwndbg.lib.cache
+    import pwndbg.lib.memory
+
+    if pwndbg.dbg.is_gdblib_available():
+        # The code in pwndbg.gdblib.vmmap does _so much_ more than just getting the
+        # entries of the vmmap. We'll probably have to port it to run on top of the
+        # Debugger-agnostic API, rather than embed its functionality inside it. When
+        # that happens, this file will become that port. For now, we just fall back
+        # on gdblib if possible, and expose weaker versions of these functions when
+        # it's not available.
+        #
+        # TODO: Port `pwndbg.gdblib.vmmap` to `aglib`.
+        import pwndbg.gdblib.vmmap
+
+_main()
+
 import pwndbg
 import pwndbg.lib.cache
 import pwndbg.lib.memory

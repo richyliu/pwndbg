@@ -18,6 +18,33 @@ from typing import Tuple
 from typing import TypeVar
 from typing import Union
 
+import line_profiler
+@line_profiler.profile
+def _main():
+    from elftools.elf.constants import SH_FLAGS
+    from elftools.elf.elffile import ELFFile
+    from elftools.elf.relocation import Relocation
+    from elftools.elf.relocation import RelocationSection
+
+    import pwndbg
+    import pwndbg.aglib.arch
+    import pwndbg.aglib.ctypes
+    import pwndbg.aglib.file
+    import pwndbg.aglib.memory
+    import pwndbg.aglib.proc
+    import pwndbg.aglib.qemu
+    import pwndbg.aglib.symbol
+    import pwndbg.aglib.vmmap
+    import pwndbg.lib.cache
+    import pwndbg.lib.elftypes
+    import pwndbg.lib.memory
+    from pwndbg.color import message
+    from pwndbg.dbg import EventType
+
+    if pwndbg.dbg.is_gdblib_available():
+        import pwndbg.auxv
+_main()
+
 from elftools.elf.constants import SH_FLAGS
 from elftools.elf.elffile import ELFFile
 from elftools.elf.relocation import Relocation

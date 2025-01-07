@@ -24,6 +24,27 @@ from typing import Tuple
 from typing import Type
 from typing import TypeVar
 
+import line_profiler
+@line_profiler.profile
+def _main():
+    import pwndbg
+    import pwndbg.aglib.heap
+    import pwndbg.aglib.heap.heap
+    import pwndbg.aglib.memory
+    import pwndbg.aglib.proc
+    import pwndbg.aglib.symbol
+    import pwndbg.aglib.tls
+    import pwndbg.aglib.typeinfo
+    import pwndbg.aglib.vmmap
+    import pwndbg.chain
+    import pwndbg.glibc
+    import pwndbg.lib.cache
+    import pwndbg.lib.memory
+    import pwndbg.search
+    from pwndbg.color import message
+    from pwndbg.color.memory import c as M
+_main()
+
 import pwndbg
 import pwndbg.aglib.heap
 import pwndbg.aglib.heap.heap

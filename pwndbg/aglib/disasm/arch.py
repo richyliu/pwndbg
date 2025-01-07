@@ -6,6 +6,36 @@ from typing import Dict
 from typing import List
 from typing import Tuple
 
+import line_profiler
+@line_profiler.profile
+def _main():
+    # from capstone import *  # noqa: F403
+    from pwnlib.constants import linux
+
+    import pwndbg.aglib.arch
+    import pwndbg.aglib.memory
+    import pwndbg.aglib.regs
+    import pwndbg.aglib.remote
+    import pwndbg.aglib.typeinfo
+    import pwndbg.aglib.vmmap
+    import pwndbg.chain
+    import pwndbg.color.context as C
+    import pwndbg.color.memory as MemoryColor
+    import pwndbg.color.message as MessageColor
+    import pwndbg.color.syntax_highlight as H
+    import pwndbg.enhance
+    import pwndbg.lib.config
+    import pwndbg.lib.disasm.helpers as bit_math
+    from pwndbg.aglib.disasm.instruction import FORWARD_JUMP_GROUP
+    from pwndbg.aglib.disasm.instruction import EnhancedOperand
+    from pwndbg.aglib.disasm.instruction import InstructionCondition
+    from pwndbg.aglib.disasm.instruction import PwndbgInstruction
+
+    # Emulator currently requires GDB, and we only use it here for type checking.
+    if TYPE_CHECKING:
+        from pwndbg.emu.emulator import Emulator
+_main()
+
 from capstone import *  # noqa: F403
 from pwnlib.constants import linux
 

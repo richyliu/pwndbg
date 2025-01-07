@@ -4,6 +4,15 @@ from dataclasses import dataclass
 from typing import List
 from typing import Tuple
 
+import line_profiler
+@line_profiler.profile
+def _main():
+    import pwndbg
+    import pwndbg.lib.config
+    import pwndbg.lib.functions
+    from pwndbg.color import message
+_main()
+
 import pwndbg
 import pwndbg.lib.config
 import pwndbg.lib.functions

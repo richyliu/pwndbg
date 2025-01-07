@@ -12,6 +12,32 @@ from typing import List
 from typing import NamedTuple
 from typing import Tuple
 
+import line_profiler
+@line_profiler.profile
+def _main():
+    import capstone as C
+    import unicorn as U
+    import unicorn.riscv_const
+
+    import pwndbg.aglib.arch
+    import pwndbg.aglib.disasm
+    import pwndbg.aglib.memory
+    import pwndbg.aglib.regs
+    import pwndbg.aglib.strings
+    import pwndbg.aglib.symbol
+    import pwndbg.aglib.vmmap
+    import pwndbg.chain
+    import pwndbg.color.enhance as E
+    import pwndbg.color.memory as M
+    import pwndbg.dbg
+    import pwndbg.enhance
+    import pwndbg.integration
+    import pwndbg.lib.memory
+    import pwndbg.lib.regs
+    from pwndbg import color
+    from pwndbg.color.syntax_highlight import syntax_highlight
+_main()
+
 import capstone as C
 import unicorn as U
 import unicorn.riscv_const

@@ -176,6 +176,7 @@ pt = { git = "https://github.com/martinradev/gdb-pt-dump", rev = "50227bda0b6332
 bcrypt = "4.2.0"
 line-profiler = "^4.2.0"
 flameprof = "^0.4"
+lazy-loader = "^0.4"
 
 [tool.poetry.group.lldb]
 optional = true

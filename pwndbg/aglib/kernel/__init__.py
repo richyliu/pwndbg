@@ -12,6 +12,21 @@ from typing import TypeVar
 
 from typing_extensions import ParamSpec
 
+import line_profiler
+@line_profiler.profile
+def _main():
+    import pwndbg.aglib.arch
+    import pwndbg.aglib.memory
+    import pwndbg.aglib.regs
+    import pwndbg.aglib.symbol
+    import pwndbg.aglib.typeinfo
+    import pwndbg.aglib.vmmap
+    import pwndbg.lib.cache
+    import pwndbg.lib.kernel.kconfig
+    import pwndbg.lib.kernel.structs
+    import pwndbg.search
+_main()
+
 import pwndbg.aglib.arch
 import pwndbg.aglib.memory
 import pwndbg.aglib.regs
