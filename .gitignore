@@ -97,3 +97,8 @@ result*
 
 # Vim
 *.swp
+
+profile_output*
+pwndbg-load.pstats
+.DS_Store
+._*
