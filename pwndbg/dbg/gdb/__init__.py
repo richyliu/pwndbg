@@ -355,6 +355,7 @@ class GDBProcess(pwndbg.dbg_mod.Process):
     def __init__(self, inner: gdb.Inferior):
         self.inner = inner
         self.in_bpwp_stop_handler = False
+        self._is_linux = None
 
     @override
     def threads(self) -> List[pwndbg.dbg_mod.Thread]:
@@ -742,6 +743,9 @@ class GDBProcess(pwndbg.dbg_mod.Process):
 
     @override
     def is_linux(self) -> bool:
+        if self._is_linux is not None:
+            return self._is_linux
+
         # Detect current ABI of client side by 'show osabi'
         #
         # Examples of strings returned by `show osabi`:
@@ -759,7 +763,10 @@ class GDBProcess(pwndbg.dbg_mod.Process):
         # 'GNU/Linux': linux
         # 'none': bare metal
 
-        return "GNU/Linux" in abi
+        # cache this information to avoid too many calls to gdb.execute()
+        self._is_linux = "GNU/Linux" in abi
+
+        return self._is_linux
 
     @override
     def disasm(self, address: int) -> pwndbg.dbg_mod.DisassembledInstruction | None:
@@ -1186,6 +1193,10 @@ def _gdb_event_class_from_event_type(ty: pwndbg.dbg_mod.EventType) -> Any:
 
 
 class GDB(pwndbg.dbg_mod.Debugger):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._inferiors_cache = {}
+
     @override
     def setup(self):
         from pwndbg.commands import load_commands
@@ -1411,7 +1422,10 @@ class GDB(pwndbg.dbg_mod.Debugger):
 
     @override
     def selected_inferior(self) -> pwndbg.dbg_mod.Process | None:
-        return GDBProcess(gdb.selected_inferior())
+        proc = gdb.selected_inferior()
+        if proc not in self._inferiors_cache:
+            self._inferiors_cache[proc] = GDBProcess(proc)
+        return self._inferiors_cache[proc]
 
     @override
     def is_gdblib_available(self):
