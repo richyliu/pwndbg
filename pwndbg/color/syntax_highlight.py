@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import os.path
 import re
 from typing import Any
@@ -12,6 +13,7 @@ import pygments.util
 from pwnlib.lexer import PwntoolsLexer
 
 import pwndbg
+import pwndbg.lib.tempfile
 from pwndbg.color import disable_colors
 from pwndbg.color import message
 from pwndbg.color import theme
@@ -26,6 +28,8 @@ style = theme.add_param(
 formatter = pygments.formatters.Terminal256Formatter(style=str(style))
 pwntools_lexer = PwntoolsLexer()
 lexer_cache: Dict[str, Any] = {}
+
+SYNTAX_HIGHLIGHT_CACHEDIR = pwndbg.lib.tempfile.cachedir("syntax-highlight")
 
 
 @pwndbg.config.trigger(style)
@@ -53,6 +57,7 @@ def syntax_highlight(code: str, filename: str = ".asm") -> str:
     filename = os.path.basename(filename)
 
     lexer = lexer_cache.get(filename, None)
+    print("syntax highlight", lexer, filename, lexer_cache)
 
     # If source code is asm, use our customized lexer.
     # Note: We can not register our Lexer to pygments and use their APIs,
@@ -66,7 +71,25 @@ def syntax_highlight(code: str, filename: str = ".asm") -> str:
 
     if not lexer:
         try:
-            lexer = pygments.lexers.guess_lexer_for_filename(filename, code, stripnl=False)
+            # Loading a lexer is slow and often done (and is pickable), so let's cache it
+            # Note that although guess_lexer_for_filename uses both the
+            # filename and code, our lexer_cache (above) only uses the filename
+            # as the key. Therefore it is safe for us to use just the filename
+            # as the key to this disk cache.
+            key = hashlib.sha1(filename.encode("utf-8")).hexdigest()
+            cache_file = os.path.join(SYNTAX_HIGHLIGHT_CACHEDIR, key)
+            if os.path.exists(cache_file):
+                # Cache hit
+                with open(cache_file, "r") as f:
+                    lexer_name = f.read()
+                    lexer = pygments.lexers.get_lexer_by_name(lexer_name)
+                    print("cache hit", lexer)
+            else:
+                # Cache miss
+                lexer = pygments.lexers.guess_lexer_for_filename(filename, code, stripnl=False)
+                with open(cache_file, "w") as f:
+                    f.write(lexer.name)
+                    print("cache miss", lexer.name, lexer)
         except pygments.util.ClassNotFound:
             # no lexer for this file or invalid style
             pass
